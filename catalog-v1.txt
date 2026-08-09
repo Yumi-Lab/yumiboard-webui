@@ -1,0 +1,9 @@
+tldr
+Github-CLI
+btop++
+Tetris CLI
+Node.js
+USBImager
+HTTrack Website Copier
+Deluge
+GParted
