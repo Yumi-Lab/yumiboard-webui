@@ -102,6 +102,14 @@ main { padding: 20px 24px 120px; }
   font-size: 12px; white-space: pre-wrap; word-break: break-word; color: var(--muted);
 }
 #empty { color: var(--muted); padding: 40px 0; text-align: center; }
+#termbtn { margin-left: auto; }
+#term {
+  position: fixed; left: 0; right: 0; bottom: 0; background: var(--card);
+  border-top: 1px solid var(--line); transform: translateY(100%);
+  transition: transform 0.18s ease; z-index: 7;
+}
+#term.open { transform: translateY(0); }
+#term iframe { display: block; width: 100%; height: 340px; border: 0; background: #000; }
 </style>
 </head>
 <body>
@@ -109,11 +117,19 @@ main { padding: 20px 24px 120px; }
   <h1>YUMI OS Board <span>· mini-projets en 1 clic</span></h1>
   <input id="search" type="search" placeholder="Rechercher" autocomplete="off">
   <nav id="cats"></nav>
+  <button class="chip" id="termbtn">Terminal</button>
 </header>
 <main>
   <div id="grid"></div>
   <p id="empty" hidden>Aucune app ne correspond.</p>
 </main>
+<div id="term">
+  <div class="bar" id="termbar">
+    <strong>Terminal</strong>
+    <span class="x">fermer</span>
+  </div>
+  <iframe id="termframe" title="Terminal"></iframe>
+</div>
 <div id="drawer">
   <div class="bar" id="drawerbar">
     <strong id="jobtitle"></strong>
@@ -266,6 +282,12 @@ async function poll() {
 }
 
 $("drawerbar").onclick = () => $("drawer").classList.remove("open");
+$("termbtn").onclick = () => {
+  const frame = $("termframe");
+  if (!frame.src) frame.src = "/terminal/";
+  $("term").classList.toggle("open");
+};
+$("termbar").onclick = () => $("term").classList.remove("open");
 $("search").oninput = (e) => { query = e.target.value.trim().toLowerCase(); render(); };
 
 loadApps();

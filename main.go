@@ -12,6 +12,8 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -52,6 +54,7 @@ func main() {
 	dir := flag.String("dir", "/home/pi/pi-apps", "path to the pi-apps checkout")
 	port := flag.Int("port", 8080, "listen port")
 	catalogPath := flag.String("catalog", "", "optional file with one app name per line (curated catalog)")
+	ttyd := flag.String("ttyd", "http://127.0.0.1:7681", "ttyd base URL reverse-proxied under /terminal/ (empty disables the web terminal)")
 	flag.Parse()
 
 	s := &server{dir: *dir}
@@ -77,6 +80,17 @@ func main() {
 	http.HandleFunc("/api/icon/", s.handleIcon)
 	http.HandleFunc("/api/action", s.handleAction)
 	http.HandleFunc("/api/job", s.handleJob)
+
+	// Web terminal: ttyd (started with -b /terminal) proxied on the same port,
+	// so the whole UI stays a single origin with no extra exposed service.
+	if *ttyd != "" {
+		ttyURL, err := url.Parse(*ttyd)
+		if err != nil {
+			log.Fatalf("ttyd: %v", err)
+		}
+		http.Handle("/terminal/", httputil.NewSingleHostReverseProxy(ttyURL))
+		http.Handle("/terminal", http.RedirectHandler("/terminal/", http.StatusMovedPermanently))
+	}
 
 	addr := fmt.Sprintf(":%d", *port)
 	log.Printf("yumiboard-webui listening on %s (engine: %s)", addr, s.dir)

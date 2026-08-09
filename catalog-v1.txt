@@ -7,3 +7,4 @@ USBImager
 HTTrack Website Copier
 Deluge
 GParted
+Podman
