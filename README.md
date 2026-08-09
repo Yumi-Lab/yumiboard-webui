@@ -19,6 +19,22 @@ Then open `http://<board>:8080`.
 | `-dir` | `/home/pi/pi-apps` | path to the pi-apps checkout (the engine) |
 | `-port` | `8080` | HTTP listen port |
 | `-catalog` | *(empty)* | optional file with one app name per line; empty = every installable app |
+| `-ttyd` | `http://127.0.0.1:7681` | ttyd base URL reverse-proxied under `/terminal/`; empty disables the web terminal |
+
+## Web terminal
+
+The **Terminal** button opens a slide-up panel with a full shell, served by
+[ttyd](https://github.com/tsl0922/ttyd) and reverse-proxied under `/terminal/`
+on the same port — one origin, no extra exposed service. Start ttyd bound to
+localhost before launching this binary:
+
+```bash
+ttyd -p 7681 -i 127.0.0.1 -b /terminal -W bash
+```
+
+> Security: ttyd's `-W` gives a writable shell with no authentication. Only run
+> it on a trusted LAN/VPN, and put authentication in front before shipping it in
+> the image.
 
 ## How it works
 
