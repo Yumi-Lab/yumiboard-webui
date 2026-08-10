@@ -8,3 +8,8 @@ HTTrack Website Copier
 Deluge
 GParted
 Podman
+Claude Code
+Grok
+OpenAI Codex
+Kimi
+Mistral Vibe
