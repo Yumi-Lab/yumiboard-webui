@@ -25,29 +25,19 @@
   --r-card: 22px;
   --r-tile: 16px;
 }
-:root[data-theme="dark"], :root:not([data-theme="light"]) {}
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #000000;
     --bg-grad: radial-gradient(120% 80% at 100% 0%, #16171b 0%, #000000 60%);
-    --surface: #1c1c1e;
-    --glass: rgba(28,28,30,0.6);
-    --glass-brd: rgba(255,255,255,0.10);
-    --text: #f5f5f7;
-    --muted: #98989d;
-    --faint: #8a8a8e;
-    --line: rgba(255,255,255,0.10);
-    --accent: #0a84ff;
-    --accent-2: #409cff;
-    --ok: #30d158;
-    --danger: #ff453a;
+    --surface: #1c1c1e; --glass: rgba(28,28,30,0.6); --glass-brd: rgba(255,255,255,0.10);
+    --text: #f5f5f7; --muted: #98989d; --faint: #8a8a8e; --line: rgba(255,255,255,0.10);
+    --accent: #0a84ff; --accent-2: #409cff; --ok: #30d158; --danger: #ff453a;
     --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.5);
     --shadow-lg: 0 16px 60px rgba(0,0,0,.6);
   }
 }
 :root[data-theme="dark"] {
-  --bg: #000000;
-  --bg-grad: radial-gradient(120% 80% at 100% 0%, #16171b 0%, #000000 60%);
+  --bg: #000000; --bg-grad: radial-gradient(120% 80% at 100% 0%, #16171b 0%, #000000 60%);
   --surface: #1c1c1e; --glass: rgba(28,28,30,0.6); --glass-brd: rgba(255,255,255,0.10);
   --text: #f5f5f7; --muted: #98989d; --faint: #8a8a8e; --line: rgba(255,255,255,0.10);
   --accent: #0a84ff; --accent-2: #409cff; --ok: #30d158; --danger: #ff453a;
@@ -59,91 +49,67 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   background: var(--bg); background-image: var(--bg-grad); background-attachment: fixed;
   color: var(--text); min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
-  font-size: 15px; line-height: 1.45; letter-spacing: -0.01em;
-  -webkit-font-smoothing: antialiased;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", "PingFang SC", "Noto Sans CJK SC", Roboto, sans-serif;
+  font-size: 15px; line-height: 1.45; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased;
 }
 button { font: inherit; color: inherit; cursor: pointer; border: none; background: none; }
 a { color: var(--accent); text-decoration: none; }
 
-/* ---- top navigation (frosted) ---- */
 .nav {
-  position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; gap: 18px;
+  position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 16px;
   padding: 12px clamp(16px, 4vw, 40px);
   background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
   border-bottom: 1px solid var(--glass-brd);
 }
-.brand { display: flex; align-items: baseline; gap: 8px; font-weight: 700; font-size: 19px; letter-spacing: -0.03em; }
+.brand { display: flex; align-items: baseline; gap: 8px; font-weight: 700; font-size: 19px; letter-spacing: -0.03em; white-space: nowrap; }
 .brand small { font-weight: 400; font-size: 13px; color: var(--muted); letter-spacing: 0; }
-.seg {
-  display: flex; background: color-mix(in srgb, var(--text) 8%, transparent);
-  border-radius: 980px; padding: 3px; gap: 2px;
-}
-.seg button {
-  padding: 6px 16px; border-radius: 980px; font-size: 13px; font-weight: 500; color: var(--muted);
-  transition: color .2s, background .2s;
-}
-.seg button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); font-weight: 600; }
-.nav .spacer { flex: 1; }
-.search {
-  display: flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 12px;
-  background: color-mix(in srgb, var(--text) 6%, transparent); min-width: 0;
-}
-.search input { border: none; background: none; outline: none; color: var(--text); font-size: 14px; width: clamp(90px, 18vw, 200px); }
+
+.seg { position: relative; display: flex; background: color-mix(in srgb, var(--text) 8%, transparent); border-radius: 980px; padding: 3px; }
+.seg .ind { position: absolute; top: 3px; bottom: 3px; left: 0; border-radius: 980px; background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,.14); z-index: 0;
+  transform: translateX(var(--ind-x, 0)); width: var(--ind-w, 0);
+  transition: transform .30s cubic-bezier(.34,1.2,.44,1), width .30s cubic-bezier(.34,1.2,.44,1); }
+.seg button { position: relative; z-index: 1; padding: 6px 17px; border-radius: 980px; font-size: 13px; font-weight: 500; color: var(--muted); transition: color .22s; white-space: nowrap; }
+.seg button.on { color: var(--text); font-weight: 600; }
+
+.spacer { flex: 1; }
+.search { display: flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 12px; background: color-mix(in srgb, var(--text) 6%, transparent); min-width: 0; }
+.search input { border: none; background: none; outline: none; color: var(--text); font-size: 14px; width: clamp(80px, 16vw, 200px); }
 .search svg { width: 15px; height: 15px; color: var(--faint); flex: none; }
-.icon-btn {
-  display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 12px;
-  background: color-mix(in srgb, var(--text) 7%, transparent); font-size: 13px; font-weight: 500;
-  transition: background .2s;
-}
+.icon-btn { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 12px; background: color-mix(in srgb, var(--text) 7%, transparent); font-size: 13px; font-weight: 500; transition: background .2s; white-space: nowrap; }
 .icon-btn:hover { background: color-mix(in srgb, var(--text) 12%, transparent); }
 .icon-btn svg { width: 15px; height: 15px; }
+.lang { position: relative; }
+.lang select {
+  appearance: none; -webkit-appearance: none; border: none; cursor: pointer;
+  background: color-mix(in srgb, var(--text) 7%, transparent); color: var(--text);
+  font: inherit; font-size: 13px; font-weight: 500; padding: 7px 30px 7px 13px; border-radius: 12px;
+}
+.lang::after { content: ""; position: absolute; right: 12px; top: 50%; width: 7px; height: 7px; border-right: 1.6px solid var(--faint); border-bottom: 1.6px solid var(--faint); transform: translateY(-65%) rotate(45deg); pointer-events: none; }
 
-/* ---- page ---- */
-main { padding: clamp(20px, 3vw, 34px) clamp(16px, 4vw, 40px) 140px; max-width: 1400px; margin: 0 auto; }
+main { padding: clamp(20px, 3vw, 34px) clamp(16px, 4vw, 40px) 140px; }
 .head { margin: 6px 2px 20px; }
 .head h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -0.03em; }
 .head p { color: var(--muted); font-size: 16px; margin-top: 4px; }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 22px; }
-.chip {
-  padding: 6px 15px; border-radius: 980px; font-size: 13px; font-weight: 500; color: var(--muted);
-  background: var(--surface); border: 1px solid var(--line); transition: all .18s;
-}
+.chip { padding: 6px 15px; border-radius: 980px; font-size: 13px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--line); transition: all .18s; }
 .chip.on { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-.grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 320px));
-  gap: 16px; justify-content: center;
-}
-@media (min-width: 720px) { .grid { justify-content: start; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 16px; }
 
-.card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card);
-  padding: 18px; display: flex; flex-direction: column; gap: 14px;
-  box-shadow: var(--shadow); cursor: pointer;
-  transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s;
-  animation: rise .5s cubic-bezier(.4,0,.2,1) backwards;
-}
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); padding: 18px;
+  display: flex; flex-direction: column; gap: 14px; box-shadow: var(--shadow); cursor: pointer;
+  transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s; animation: rise .5s cubic-bezier(.4,0,.2,1) backwards; }
 .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
 .card .top { display: flex; align-items: center; gap: 13px; }
-.card .ico { width: 54px; height: 54px; border-radius: var(--r-tile); flex: none;
-  box-shadow: 0 1px 3px rgba(0,0,0,.14); background: #fff; }
+.card .ico { width: 54px; height: 54px; border-radius: var(--r-tile); flex: none; box-shadow: 0 1px 3px rgba(0,0,0,.14); background: #fff; }
 .card .meta { min-width: 0; }
 .card .nm { font-weight: 600; font-size: 16px; letter-spacing: -0.02em; }
 .card .cat { color: var(--faint); font-size: 12.5px; }
-.card .desc {
-  color: var(--muted); font-size: 13.5px; line-height: 1.4;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.8em;
-}
+.card .desc { color: var(--muted); font-size: 13.5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.8em; }
 .card .foot { display: flex; align-items: center; gap: 8px; margin-top: auto; }
 
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  padding: 7px 18px; border-radius: 980px; font-size: 13px; font-weight: 600;
-  background: var(--accent); color: #fff; transition: background .18s, transform .1s;
-}
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 7px 18px; border-radius: 980px; font-size: 13px; font-weight: 600; background: var(--accent); color: #fff; transition: background .18s, transform .1s; }
 .btn svg { width: 16px; height: 16px; flex: none; }
 .btn:hover { background: var(--accent-2); }
 .btn:active { transform: scale(.97); }
@@ -153,30 +119,16 @@ main { padding: clamp(20px, 3vw, 34px) clamp(16px, 4vw, 40px) 140px; max-width: 
 .btn.ghost { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
 .badge { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12.5px; font-weight: 500; }
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); flex: none; }
-.mini {
-  margin-left: auto; width: 30px; height: 30px; border-radius: 9px; display: inline-grid; place-items: center;
-  color: var(--faint); transition: background .15s;
-}
+.mini { margin-left: auto; width: 30px; height: 30px; border-radius: 9px; display: inline-grid; place-items: center; color: var(--faint); transition: background .15s; }
 .mini:hover { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
 .mini svg { width: 17px; height: 17px; }
 
 .empty { text-align: center; color: var(--muted); padding: 70px 0; }
 .empty svg { width: 40px; height: 40px; color: var(--faint); margin-bottom: 12px; }
 
-/* ---- detail sheet ---- */
-.scrim {
-  position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.28);
-  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
-  display: grid; place-items: center; padding: 20px;
-  opacity: 0; pointer-events: none; transition: opacity .2s;
-}
+.scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.28); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); display: grid; place-items: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s; }
 .scrim.open { opacity: 1; pointer-events: auto; }
-.sheet {
-  width: min(520px, 100%); max-height: 88vh; overflow-y: auto;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 26px;
-  box-shadow: var(--shadow-lg); padding: 26px;
-  transform: scale(.96) translateY(8px); transition: transform .24s cubic-bezier(.4,0,.2,1);
-}
+.sheet { width: min(520px, 100%); max-height: 88vh; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 26px; box-shadow: var(--shadow-lg); padding: 26px; transform: scale(.96) translateY(8px); transition: transform .24s cubic-bezier(.4,0,.2,1); }
 .scrim.open .sheet { transform: none; }
 .sheet .hero { display: flex; align-items: center; gap: 16px; }
 .sheet .hero img { width: 76px; height: 76px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.16); background:#fff; }
@@ -185,101 +137,129 @@ main { padding: clamp(20px, 3vw, 34px) clamp(16px, 4vw, 40px) 140px; max-width: 
 .sheet .body { color: var(--muted); font-size: 14.5px; line-height: 1.5; margin: 18px 0 22px; white-space: pre-line; }
 .sheet .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .sheet .actions .btn { padding: 10px 22px; font-size: 14px; }
-.howto {
-  margin-top: 18px; padding: 13px 15px; border-radius: 14px; font-size: 13px;
-  background: color-mix(in srgb, var(--text) 5%, transparent); color: var(--muted);
-}
+.howto { margin-top: 18px; padding: 13px 15px; border-radius: 14px; font-size: 13px; background: color-mix(in srgb, var(--text) 5%, transparent); color: var(--muted); }
 .howto code { font-family: ui-monospace, "SF Mono", Menlo, monospace; color: var(--text); }
 
-/* ---- bottom drawers (frosted) ---- */
-.drawer {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
-  background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
-  border-top: 1px solid var(--glass-brd); box-shadow: 0 -10px 40px rgba(0,0,0,.14);
-  transform: translateY(100%); transition: transform .26s cubic-bezier(.4,0,.2,1);
-}
+.drawer { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border-top: 1px solid var(--glass-brd); box-shadow: 0 -10px 40px rgba(0,0,0,.14); transform: translateY(100%); transition: transform .26s cubic-bezier(.4,0,.2,1); }
 .drawer.open { transform: translateY(0); }
 .drawer .bar { display: flex; align-items: center; gap: 10px; padding: 11px clamp(16px,4vw,40px); }
 .drawer .bar strong { font-size: 13.5px; font-weight: 600; }
 .drawer .bar .st { color: var(--muted); font-size: 13px; }
 .drawer .bar .x { margin-left: auto; }
-.cmdbar {
-  display: flex; align-items: center; gap: 10px; margin: 0 clamp(16px,4vw,40px) 8px;
-  padding: 9px 13px; border-radius: 11px; background: color-mix(in srgb, var(--text) 6%, transparent); font-size: 13px;
-}
+.cmdbar { display: flex; align-items: center; gap: 10px; margin: 0 clamp(16px,4vw,40px) 8px; padding: 9px 13px; border-radius: 11px; background: color-mix(in srgb, var(--text) 6%, transparent); font-size: 13px; }
 .cmdbar code { font-family: ui-monospace,"SF Mono",Menlo,monospace; color: var(--text); flex: 1; }
-#log {
-  height: 210px; overflow-y: auto; padding: 0 clamp(16px,4vw,40px) 14px;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; line-height: 1.5;
-  white-space: pre-wrap; word-break: break-word; color: var(--muted);
-}
+#log { height: 210px; overflow-y: auto; padding: 0 clamp(16px,4vw,40px) 14px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; color: var(--muted); }
 #termframe { display: block; width: 100%; height: 44vh; border: 0; background: #000; }
 .hidden { display: none !important; }
 </style>
 </head>
 <body>
 <nav class="nav">
-  <div class="brand">YUMI OS Board <small>Boutique</small></div>
+  <div class="brand">YUMI OS Board <small data-t="brand_sub">Boutique</small></div>
   <div class="seg" id="seg">
-    <button data-view="discover" class="on">Découvrir</button>
-    <button data-view="mine">Mes apps</button>
+    <span class="ind"></span>
+    <button data-view="mine" data-t="mine">Mes apps</button>
+    <button data-view="discover" class="on" data-t="store">Store</button>
   </div>
   <div class="spacer"></div>
   <label class="search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
-    <input id="search" type="search" placeholder="Rechercher" autocomplete="off">
+    <input id="search" type="search" autocomplete="off">
   </label>
   <button class="icon-btn" id="termbtn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></svg>
-    Terminal
+    <span data-t="terminal">Terminal</span>
   </button>
+  <button class="icon-btn" id="theme" aria-label="Thème" style="padding:7px 10px"></button>
+  <span class="lang">
+    <select id="lang" aria-label="Language">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+    </select>
+  </span>
 </nav>
 
 <main>
   <div class="head">
-    <h1 id="h-title">Découvrir</h1>
-    <p id="h-sub">Des mini-projets à installer en un clic.</p>
+    <h1 id="h-title"></h1>
+    <p id="h-sub"></p>
   </div>
   <nav class="chips" id="chips"></nav>
   <div class="grid" id="grid"></div>
   <div class="empty hidden" id="empty">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12h8"/></svg>
-    <div id="empty-txt">Rien ici pour l'instant.</div>
+    <div id="empty-txt"></div>
   </div>
 </main>
 
-<!-- detail sheet -->
-<div class="scrim" id="scrim">
-  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
-</div>
+<div class="scrim" id="scrim"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 
-<!-- terminal drawer -->
 <div class="drawer" id="term">
-  <div class="bar">
-    <strong>Terminal</strong>
-    <button class="icon-btn x" id="term-x">Fermer</button>
-  </div>
-  <div class="cmdbar hidden" id="cmdbar">
-    <span style="color:var(--muted)">Commande&nbsp;:</span> <code id="cmd"></code>
-    <button class="btn soft" id="cmd-copy">Copier</button>
-  </div>
+  <div class="bar"><strong data-t="terminal">Terminal</strong><button class="icon-btn x" id="term-x" data-t="close">Fermer</button></div>
+  <div class="cmdbar hidden" id="cmdbar"><span style="color:var(--muted)" data-t="command">Commande</span>&nbsp;: <code id="cmd"></code><button class="btn soft" id="cmd-copy" data-t="copy">Copier</button></div>
   <iframe id="termframe" title="Terminal"></iframe>
 </div>
 
-<!-- install log drawer -->
 <div class="drawer" id="job">
-  <div class="bar">
-    <strong id="jobtitle"></strong>
-    <span class="st" id="jobstate"></span>
-    <button class="icon-btn x" id="job-x">Fermer</button>
-  </div>
+  <div class="bar"><strong id="jobtitle"></strong><span class="st" id="jobstate"></span><button class="icon-btn x" id="job-x" data-t="close">Fermer</button></div>
   <div id="log"></div>
 </div>
 
 <script>
 "use strict";
 const $ = (id) => document.getElementById(id);
-let apps = [], view = "discover", cat = "Tout", query = "", busy = false, offset = 0, timer = null, current = null;
+
+/* ---------- i18n ---------- */
+const I18N = {
+  fr: { brand_sub:"Boutique", store:"Store", mine:"Mes apps", search:"Rechercher", terminal:"Terminal", close:"Fermer",
+    title_store:"Store", sub_store:"Des mini-projets à installer en un clic.",
+    title_mine:"Mes apps", sub_mine:"Vos apps installées — ouvrez-les d'un clic.",
+    all:"Tout", install:"Installer", repair:"Réparer", free:"Gratuit", installed:"Installé",
+    open:"Ouvrir", doc:"Doc", uninstall:"Désinstaller", cancel:"Annuler",
+    empty_mine:"Aucune app installée. Passez au Store pour en installer une.", empty_search:"Aucune app ne correspond.",
+    installing:"Installation de", uninstalling:"Désinstallation de", inprogress:"en cours…", done:"Terminé", failed:"Échec",
+    command:"Commande", copy:"Copier", howto:"Dans le terminal, tapez :", confirm:"Désinstaller",
+    cats:{ "AI":"IA","Games":"Jeux","Internet":"Internet","Programming":"Développement","System Management":"Système","Tools":"Outils" } },
+  en: { brand_sub:"Store", store:"Store", mine:"My apps", search:"Search", terminal:"Terminal", close:"Close",
+    title_store:"Store", sub_store:"Handy mini-projects, one click to install.",
+    title_mine:"My apps", sub_mine:"Your installed apps — open them in one click.",
+    all:"All", install:"Install", repair:"Repair", free:"Free", installed:"Installed",
+    open:"Open", doc:"Docs", uninstall:"Uninstall", cancel:"Cancel",
+    empty_mine:"No app installed yet. Head to the Store to install one.", empty_search:"No matching app.",
+    installing:"Installing", uninstalling:"Removing", inprogress:"in progress…", done:"Done", failed:"Failed",
+    command:"Command", copy:"Copy", howto:"In the terminal, type:", confirm:"Uninstall",
+    cats:{ "AI":"AI","Games":"Games","Internet":"Internet","Programming":"Programming","System Management":"System","Tools":"Tools" } },
+  zh: { brand_sub:"商店", store:"商店", mine:"我的应用", search:"搜索", terminal:"终端", close:"关闭",
+    title_store:"商店", sub_store:"实用小项目，一键安装。",
+    title_mine:"我的应用", sub_mine:"已安装的应用 — 一键打开。",
+    all:"全部", install:"安装", repair:"修复", free:"免费", installed:"已安装",
+    open:"打开", doc:"文档", uninstall:"卸载", cancel:"取消",
+    empty_mine:"还没有安装应用。前往商店安装一个。", empty_search:"没有匹配的应用。",
+    installing:"正在安装", uninstalling:"正在卸载", inprogress:"进行中…", done:"完成", failed:"失败",
+    command:"命令", copy:"复制", howto:"在终端中输入：", confirm:"卸载",
+    cats:{ "AI":"人工智能","Games":"游戏","Internet":"网络","Programming":"编程","System Management":"系统","Tools":"工具" } },
+};
+function cookie(k){ return document.cookie.split("; ").find(x=>x.startsWith(k+"="))?.split("=")[1]; }
+
+/* ---------- theme ---------- */
+const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>';
+const MOON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 14.5A8 8 0 0 1 9.5 4a1 1 0 0 0-1.3-1.3A9.5 9.5 0 1 0 21.3 15.8 1 1 0 0 0 20 14.5z"/></svg>';
+function currentTheme(){
+  const set = document.documentElement.getAttribute("data-theme");
+  if (set) return set;
+  return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+function applyTheme(){ $("theme").innerHTML = currentTheme() === "dark" ? SUN : MOON; }
+(function initTheme(){ const c = cookie("theme"); if (c === "dark" || c === "light") document.documentElement.setAttribute("data-theme", c); })();
+
+let lang = cookie("lang") || (navigator.language||"fr").slice(0,2);
+if (!I18N[lang]) lang = (lang === "zh") ? "zh" : (navigator.language||"").startsWith("fr") ? "fr" : "en";
+if (!I18N[lang]) lang = "fr";
+function t(k){ return (I18N[lang] && I18N[lang][k]) || I18N.fr[k] || k; }
+function tcat(name){ return (I18N[lang].cats && I18N[lang].cats[name]) || name; }
+
+let apps = [], view = "discover", cat = "Tout", query = "", busy = false, offset = 0, timer = null;
 
 const ICON = {
   open:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
@@ -288,33 +268,49 @@ const ICON = {
   dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>'
 };
 
-async function loadApps() {
-  apps = await (await fetch("/api/apps")).json() || [];
-  renderChips(); render();
+function applyStatic() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
+  $("search").placeholder = t("search");
+  $("h-title").textContent = view === "mine" ? t("title_mine") : t("title_store");
+  $("h-sub").textContent = view === "mine" ? t("sub_mine") : t("sub_store");
+  $("lang").value = lang;
 }
+function moveIndicator() {
+  const on = $("seg").querySelector("button.on"); const ind = $("seg").querySelector(".ind");
+  ind.style.setProperty("--ind-x", on.offsetLeft + "px");
+  ind.style.setProperty("--ind-w", on.offsetWidth + "px");
+}
+
+async function loadApps() { apps = await (await fetch("/api/apps")).json() || []; renderChips(); render(); }
 
 $("seg").addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b) return;
   view = b.dataset.view;
-  [...$("seg").children].forEach(x => x.classList.toggle("on", x === b));
-  cat = "Tout";
-  $("h-title").textContent = view === "mine" ? "Mes apps" : "Découvrir";
-  $("h-sub").textContent = view === "mine"
-    ? "Vos apps installées — ouvrez-les d'un clic."
-    : "Des mini-projets à installer en un clic.";
-  renderChips(); render();
+  [...$("seg").querySelectorAll("button")].forEach(x => x.classList.toggle("on", x === b));
+  moveIndicator(); cat = "Tout"; applyStatic(); renderChips(); render();
 });
+$("lang").addEventListener("change", (e) => {
+  lang = e.target.value; document.cookie = "lang=" + lang + ";path=/;max-age=31536000";
+  applyStatic(); moveIndicator(); renderChips(); render();
+});
+window.addEventListener("resize", moveIndicator);
+$("theme").addEventListener("click", () => {
+  const next = currentTheme() === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  document.cookie = "theme=" + next + ";path=/;max-age=31536000";
+  applyTheme();
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
 
-function pool() {
-  return view === "mine" ? apps.filter(a => a.status === "installed") : apps;
-}
+function pool(){ return view === "mine" ? apps.filter(a => a.status === "installed") : apps; }
 function renderChips() {
   if (view === "mine") { $("chips").innerHTML = ""; return; }
   const names = ["Tout", ...[...new Set(apps.map(a => a.category).filter(Boolean))].sort()];
   $("chips").replaceChildren(...names.map(n => {
     const b = document.createElement("button");
     b.className = "chip" + (n === cat ? " on" : "");
-    b.textContent = n === "Tout" ? "Tout" : n;
+    b.textContent = n === "Tout" ? t("all") : tcat(n);
     b.onclick = () => { cat = n; renderChips(); render(); };
     return b;
   }));
@@ -324,9 +320,7 @@ function render() {
     (view === "mine" || cat === "Tout" || a.category === cat) &&
     (!query || a.name.toLowerCase().includes(query) || (a.description||"").toLowerCase().includes(query)));
   $("empty").classList.toggle("hidden", list.length > 0);
-  $("empty-txt").textContent = view === "mine"
-    ? "Aucune app installée. Passez à Découvrir pour en installer une."
-    : "Aucune app ne correspond.";
+  $("empty-txt").textContent = view === "mine" ? t("empty_mine") : t("empty_search");
   $("grid").replaceChildren(...list.map((a, i) => card(a, i)));
 }
 
@@ -334,137 +328,105 @@ function card(a, i) {
   const el = document.createElement("div");
   el.className = "card"; el.style.animationDelay = Math.min(i * 24, 300) + "ms";
   const installed = a.status === "installed";
-  const img = document.createElement("img");
-  img.className = "ico"; img.loading = "lazy"; img.alt = "";
+  const img = document.createElement("img"); img.className = "ico"; img.loading = "lazy"; img.alt = "";
   img.src = "/api/icon/" + encodeURIComponent(a.name);
   const meta = document.createElement("div"); meta.className = "meta";
   meta.innerHTML = `<div class="nm"></div><div class="cat"></div>`;
   meta.querySelector(".nm").textContent = a.name;
-  meta.querySelector(".cat").textContent = a.category || "";
+  meta.querySelector(".cat").textContent = tcat(a.category || "");
   const top = document.createElement("div"); top.className = "top"; top.append(img, meta);
   const desc = document.createElement("div"); desc.className = "desc"; desc.textContent = a.description || "";
   const foot = document.createElement("div"); foot.className = "foot";
-
   if (installed) {
     const primary = launchButton(a);
-    if (primary) foot.append(primary);
-    else foot.append(badge());
-    const more = document.createElement("button");
-    more.className = "mini"; more.innerHTML = ICON.dots; more.title = "Gérer";
+    foot.append(primary || badge());
+    const more = document.createElement("button"); more.className = "mini"; more.innerHTML = ICON.dots;
     more.onclick = (e) => { e.stopPropagation(); openSheet(a); };
     foot.append(more);
   } else {
-    const b = document.createElement("button");
-    b.className = "btn"; b.textContent = a.status === "corrupted" ? "Réparer" : "Installer";
-    b.disabled = busy;
+    const b = document.createElement("button"); b.className = "btn"; b.textContent = a.status === "corrupted" ? t("repair") : t("install"); b.disabled = busy;
     b.onclick = (e) => { e.stopPropagation(); act(a.name, "install"); };
-    foot.append(b);
-    foot.append(priceHint());
+    const free = document.createElement("span"); free.className = "badge"; free.style.marginLeft = "auto"; free.textContent = t("free");
+    foot.append(b, free);
   }
   el.append(top, desc, foot);
   el.onclick = () => openSheet(a);
   return el;
 }
-function badge() { const s = document.createElement("span"); s.className = "badge"; s.innerHTML = '<span class="dot"></span>Installé'; return s; }
-function priceHint() { const s = document.createElement("span"); s.className = "badge"; s.style.marginLeft="auto"; s.textContent = "Gratuit"; return s; }
+function badge(){ const s = document.createElement("span"); s.className = "badge"; s.innerHTML = `<span class="dot"></span>${t("installed")}`; return s; }
 
 function launchButton(a) {
   const L = a.launch; if (!L) return null;
-  const b = document.createElement("button"); b.className = "btn";
-  if (L.open) { b.textContent = "Ouvrir"; b.onclick = (e) => { e.stopPropagation(); window.open(L.open, "_blank"); }; return b; }
-  if (L.run) { b.className = "btn soft"; b.innerHTML = ICON.term + " Terminal"; b.onclick = (e) => { e.stopPropagation(); openTerminal(L.run); }; return b; }
-  if (L.doc) { b.className = "btn soft"; b.textContent = "Doc"; b.onclick = (e) => { e.stopPropagation(); window.open(L.doc, "_blank"); }; return b; }
+  const b = document.createElement("button");
+  if (L.open) { b.className = "btn"; b.textContent = t("open"); b.onclick = (e) => { e.stopPropagation(); window.open(L.open, "_blank"); }; return b; }
+  if (L.run) { b.className = "btn soft"; b.innerHTML = ICON.term + "<span>" + t("terminal") + "</span>"; b.onclick = (e) => { e.stopPropagation(); openTerminal(L.run); }; return b; }
+  if (L.doc) { b.className = "btn soft"; b.textContent = t("doc"); b.onclick = (e) => { e.stopPropagation(); window.open(L.doc, "_blank"); }; return b; }
   return null;
 }
 
-/* ---- detail sheet ---- */
 function openSheet(a) {
-  current = a;
-  const installed = a.status === "installed";
-  const L = a.launch || {};
-  const s = $("sheet");
-  s.innerHTML = "";
+  const installed = a.status === "installed"; const L = a.launch || {};
+  const s = $("sheet"); s.innerHTML = "";
   const hero = document.createElement("div"); hero.className = "hero";
   hero.innerHTML = `<img src="/api/icon/${encodeURIComponent(a.name)}" alt=""><div><h2></h2><div class="cat"></div></div>`;
   hero.querySelector("h2").textContent = a.name;
-  hero.querySelector(".cat").textContent = (a.category || "") + (installed ? " · Installé" : " · Gratuit");
+  hero.querySelector(".cat").textContent = tcat(a.category || "") + " · " + (installed ? t("installed") : t("free"));
   const body = document.createElement("div"); body.className = "body"; body.textContent = a.description || "";
   const actions = document.createElement("div"); actions.className = "actions";
-
   if (!installed) {
-    const b = document.createElement("button"); b.className = "btn"; b.textContent = a.status === "corrupted" ? "Réparer" : "Installer"; b.disabled = busy;
-    b.onclick = () => { closeSheet(); act(a.name, "install"); };
-    actions.append(b);
+    const b = document.createElement("button"); b.className = "btn"; b.textContent = a.status === "corrupted" ? t("repair") : t("install"); b.disabled = busy;
+    b.onclick = () => { closeSheet(); act(a.name, "install"); }; actions.append(b);
   } else {
-    if (L.open) { const b = document.createElement("button"); b.className="btn"; b.innerHTML = ICON.open + " Ouvrir"; b.onclick = () => window.open(L.open,"_blank"); actions.append(b); }
-    if (L.run) { const b = document.createElement("button"); b.className="btn"+(L.open?" soft":""); b.innerHTML = ICON.term + " Terminal"; b.onclick = () => { closeSheet(); openTerminal(L.run); }; actions.append(b); }
-    if (L.doc) { const b = document.createElement("button"); b.className="btn soft"; b.innerHTML = ICON.doc + " Doc"; b.onclick = () => window.open(L.doc,"_blank"); actions.append(b); }
-    const u = document.createElement("button"); u.className = "btn ghost"; u.textContent = "Désinstaller"; u.style.marginLeft = "auto"; u.style.color = "var(--danger)";
-    u.onclick = () => confirmUninstall(a);
-    actions.append(u);
+    if (L.open) { const b = document.createElement("button"); b.className="btn"; b.innerHTML = ICON.open + "<span>"+t("open")+"</span>"; b.onclick = () => window.open(L.open,"_blank"); actions.append(b); }
+    if (L.run) { const b = document.createElement("button"); b.className="btn"+(L.open?" soft":""); b.innerHTML = ICON.term + "<span>"+t("terminal")+"</span>"; b.onclick = () => { closeSheet(); openTerminal(L.run); }; actions.append(b); }
+    if (L.doc) { const b = document.createElement("button"); b.className="btn soft"; b.innerHTML = ICON.doc + "<span>"+t("doc")+"</span>"; b.onclick = () => window.open(L.doc,"_blank"); actions.append(b); }
+    const u = document.createElement("button"); u.className = "btn ghost"; u.textContent = t("uninstall"); u.style.marginLeft = "auto"; u.style.color = "var(--danger)";
+    u.onclick = () => confirmUninstall(a); actions.append(u);
   }
   s.append(hero, body, actions);
-  if (installed && L.run) {
-    const h = document.createElement("div"); h.className = "howto";
-    h.innerHTML = `Dans le terminal, tapez&nbsp;: <code>${L.run}</code>`;
-    s.append(h);
-  }
+  if (installed && L.run) { const h = document.createElement("div"); h.className = "howto"; h.innerHTML = `${t("howto")} <code>${L.run}</code>`; s.append(h); }
   $("scrim").classList.add("open");
 }
-function closeSheet() { $("scrim").classList.remove("open"); }
+function closeSheet(){ $("scrim").classList.remove("open"); }
 $("scrim").addEventListener("click", (e) => { if (e.target === $("scrim")) closeSheet(); });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeSheet(); } });
-
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSheet(); });
 function confirmUninstall(a) {
-  const s = $("sheet");
-  const box = document.createElement("div"); box.className = "howto";
-  box.style.marginTop = "16px";
-  box.innerHTML = `<div style="margin-bottom:10px">Désinstaller <b style="color:var(--text)">${a.name}</b>&nbsp;?</div>`;
+  const s = $("sheet"); const box = document.createElement("div"); box.className = "howto"; box.style.marginTop = "16px";
+  box.innerHTML = `<div style="margin-bottom:10px">${t("confirm")} <b style="color:var(--text)">${a.name}</b>&nbsp;?</div>`;
   const row = document.createElement("div"); row.className = "actions";
-  const yes = document.createElement("button"); yes.className = "btn"; yes.style.background = "var(--danger)"; yes.textContent = "Désinstaller";
+  const yes = document.createElement("button"); yes.className = "btn"; yes.style.background = "var(--danger)"; yes.textContent = t("uninstall");
   yes.onclick = () => { closeSheet(); act(a.name, "uninstall"); };
-  const no = document.createElement("button"); no.className = "btn ghost"; no.textContent = "Annuler"; no.onclick = () => openSheet(a);
+  const no = document.createElement("button"); no.className = "btn ghost"; no.textContent = t("cancel"); no.onclick = () => openSheet(a);
   row.append(yes, no); box.append(row); s.append(box);
 }
 
-/* ---- terminal ---- */
 function openTerminal(cmd) {
-  const frame = $("termframe");
-  if (!frame.src) frame.src = "/terminal/";
-  if (cmd) { $("cmd").textContent = cmd; $("cmdbar").classList.remove("hidden"); }
-  else { $("cmdbar").classList.add("hidden"); }
+  const frame = $("termframe"); if (!frame.src) frame.src = "/terminal/";
+  if (cmd) { $("cmd").textContent = cmd; $("cmdbar").classList.remove("hidden"); } else { $("cmdbar").classList.add("hidden"); }
   $("term").classList.add("open");
 }
 $("termbtn").onclick = () => openTerminal(null);
 $("term-x").onclick = () => $("term").classList.remove("open");
 $("cmd-copy").onclick = () => { navigator.clipboard && navigator.clipboard.writeText($("cmd").textContent); };
 
-/* ---- install / uninstall ---- */
 async function act(app, action) {
   if (busy) return;
   const r = await fetch("/api/action", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ App: app, Action: action }) });
   if (!r.ok) return;
   busy = true; offset = 0; $("log").textContent = "";
-  $("jobtitle").textContent = (action === "install" ? "Installation de " : "Désinstallation de ") + app;
-  $("jobstate").textContent = "en cours…";
-  $("job").classList.add("open");
-  render();
+  $("jobtitle").textContent = (action === "install" ? t("installing") : t("uninstalling")) + " " + app;
+  $("jobstate").textContent = t("inprogress"); $("job").classList.add("open"); render();
   timer = setInterval(poll, 1000);
 }
 async function poll() {
-  const j = await (await fetch("/api/job?offset=" + offset)).json();
-  if (!j) return;
+  const j = await (await fetch("/api/job?offset=" + offset)).json(); if (!j) return;
   if (j.chunk) { offset = j.offset; const log = $("log"); log.textContent += j.chunk.replace(/\x1b\[[0-9;?]*[a-zA-Z]/g, ""); log.scrollTop = log.scrollHeight; }
-  if (!j.running) {
-    clearInterval(timer); timer = null; busy = false;
-    $("jobstate").textContent = j.exit === 0 ? "Terminé" : "Échec (code " + j.exit + ")";
-    loadApps();
-  }
+  if (!j.running) { clearInterval(timer); timer = null; busy = false; $("jobstate").textContent = j.exit === 0 ? t("done") : t("failed") + " (" + j.exit + ")"; loadApps(); }
 }
 $("job-x").onclick = () => $("job").classList.remove("open");
 $("search").oninput = (e) => { query = e.target.value.trim().toLowerCase(); render(); };
 
-loadApps();
+applyStatic(); applyTheme(); moveIndicator(); loadApps();
 </script>
 </body>
 </html>
