@@ -13,3 +13,4 @@ Grok
 OpenAI Codex
 Kimi
 Mistral Vibe
+picoclaw
