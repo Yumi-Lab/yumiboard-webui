@@ -65,6 +65,7 @@ func main() {
 	port := flag.Int("port", 8080, "listen port")
 	catalogPath := flag.String("catalog", "", "optional file with one app name per line (curated catalog)")
 	ttyd := flag.String("ttyd", "http://127.0.0.1:7681", "ttyd base URL reverse-proxied under /terminal/ (empty disables the web terminal)")
+	assistant := flag.String("assistant", "http://127.0.0.1:8770", "Yumi-AI-assistant base URL reverse-proxied under /assistant/ (empty disables the embedded assistant)")
 	flag.Parse()
 
 	s := &server{dir: *dir}
@@ -100,6 +101,17 @@ func main() {
 		}
 		http.Handle("/terminal/", httputil.NewSingleHostReverseProxy(ttyURL))
 		http.Handle("/terminal", http.RedirectHandler("/terminal/", http.StatusMovedPermanently))
+	}
+
+	// The AI assistant is a separate module; embed it same-origin so the widget
+	// and its streaming API avoid CORS. /assistant/* → the module's own /*.
+	if *assistant != "" {
+		aURL, err := url.Parse(*assistant)
+		if err != nil {
+			log.Fatalf("assistant: %v", err)
+		}
+		http.Handle("/assistant/", http.StripPrefix("/assistant", httputil.NewSingleHostReverseProxy(aURL)))
+		http.Handle("/assistant", http.RedirectHandler("/assistant/", http.StatusMovedPermanently))
 	}
 
 	addr := fmt.Sprintf(":%d", *port)

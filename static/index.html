@@ -428,5 +428,8 @@ $("search").oninput = (e) => { query = e.target.value.trim().toLowerCase(); rend
 
 applyStatic(); applyTheme(); moveIndicator(); loadApps();
 </script>
+<!-- Embedded AI assistant (separate module, same-origin via /assistant proxy) -->
+<script src="/assistant/widget.js" data-api="/assistant"
+        data-system="Tu es l'assistant de YUMI Board OS, sur un Yumi Smart Pi (Allwinner H3, 32-bit). Tu peux installer des apps depuis le store, ouvrir le terminal et gérer l'appareil. Réponds simplement, en français."></script>
 </body>
 </html>
