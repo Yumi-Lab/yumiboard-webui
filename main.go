@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io/fs"
 	"log"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -26,10 +27,19 @@ import (
 var staticFS embed.FS
 
 type App struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Category    string `json:"category"`
-	Status      string `json:"status"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Category    string  `json:"category"`
+	Status      string  `json:"status"`
+	Launch      *Launch `json:"launch,omitempty"`
+}
+
+// Launch tells the UI how to actually USE an app once it is installed:
+// open a URL, run a command in the web terminal, or read its docs.
+type Launch struct {
+	Open string `json:"open,omitempty"` // URL to open ({host} = the board's hostname)
+	Run  string `json:"run,omitempty"`  // command to run in the integrated terminal
+	Doc  string `json:"doc,omitempty"`  // documentation URL
 }
 
 type jobState struct {
@@ -152,6 +162,10 @@ func (s *server) categories() map[string]string {
 }
 
 func (s *server) handleApps(w http.ResponseWriter, r *http.Request) {
+	host := r.Host
+	if h, _, err := net.SplitHostPort(host); err == nil {
+		host = h
+	}
 	cats := s.categories()
 	var apps []App
 	for _, name := range s.appNames() {
@@ -164,10 +178,44 @@ func (s *server) handleApps(w http.ResponseWriter, r *http.Request) {
 			Description: firstLine(filepath.Join(s.dir, "apps", name, "description")),
 			Category:    cats[name],
 			Status:      status,
+			Launch:      s.launch(name, host),
 		})
 	}
 	sort.Slice(apps, func(i, j int) bool { return apps[i].Name < apps[j].Name })
 	writeJSON(w, apps)
+}
+
+// launch reads apps/<name>/yumi-launch (key=value lines: open=, run=, doc=)
+// and substitutes {host} in the open URL with the board's hostname.
+func (s *server) launch(name, host string) *Launch {
+	raw, err := os.ReadFile(filepath.Join(s.dir, "apps", name, "yumi-launch"))
+	if err != nil {
+		return nil
+	}
+	l := &Launch{}
+	for _, line := range strings.Split(string(raw), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		key, val, ok := strings.Cut(line, "=")
+		if !ok {
+			continue
+		}
+		val = strings.TrimSpace(val)
+		switch strings.TrimSpace(key) {
+		case "open":
+			l.Open = strings.ReplaceAll(val, "{host}", host)
+		case "run":
+			l.Run = val
+		case "doc":
+			l.Doc = val
+		}
+	}
+	if l.Open == "" && l.Run == "" && l.Doc == "" {
+		return nil
+	}
+	return l
 }
 
 func (s *server) handleIcon(w http.ResponseWriter, r *http.Request) {
